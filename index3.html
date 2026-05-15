@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Knowledge Ambassadors Club | KarU KAC | Knowledge for Life</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, 'Inter', sans-serif;
+      background: linear-gradient(145deg, #eef5e6 0%, #d9e8cf 100%);
+      color: #1a2e1f;
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+
+    /* loading screen */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #2e5c2e;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
+    .loader.hide {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader-circle {
+      width: 60px;
+      height: 60px;
+      border: 6px solid #c6f7d0;
+      border-top: 6px solid #f5ffdc;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    /* particle background */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      background: transparent;
+    }
+
+    /* Glassmorphism & clean cards */
+    .glass-card, .announce-card, .activity-card, .member-card, .contact-card, .group-card {
+      background: rgba(255, 255, 245, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 32px;
+      box-shadow: 0 8px 28px rgba(0, 32, 0, 0.08);
+      border: 1px solid rgba(120, 180, 80, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* Header - green fresh */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 3rem;
+      background: #8bc34a;  /* fresh apple green (not too dark/light) */
+      border-radius: 0 0 48px 48px;
+      margin-bottom: 2rem;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+    }
+    .glow-text {
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: white;
+      text-shadow: 3px 3px 0 #558b2f;
+      word-break: break-word;
+    }
+    .motto {
+      font-size: 1.4rem;
+      margin-top: 0.5rem;
+      font-weight: 500;
+      color: #fff7cf;
+      display: inline-block;
+      animation: floatMotto 3s ease-in-out infinite;
+    }
+    @keyframes floatMotto {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+      100% { transform: translateY(0px); }
+    }
+
+    /* ===== NEW SLIDER ANIMATION (smooth & professional) ===== */
+    .slider-container {
+      overflow: hidden;
+      margin: 2rem 0;
+      padding: 0.5rem 0;
+      border-radius: 56px;
+      background: rgba(255,255,240,0.5);
+      backdrop-filter: blur(4px);
+    }
+    .slider-track {
+      display: flex;
+      gap: 1.8rem;
+      animation: floatSlide 32s linear infinite;
+      width: max-content;
+      will-change: transform;
+    }
+    .slider-container:hover .slider-track {
+      animation-play-state: paused;
+    }
+    @keyframes floatSlide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .announce-card {
+      width: 340px;
+      flex-shrink: 0;
+      padding: 1.2rem 1.5rem;
+      background: rgba(255,255,245,0.95);
+      border-radius: 48px;
+      font-weight: 500;
+      font-size: 0.95rem;
+      line-height: 1.4;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+      border-left: 8px solid #7CB342;
+    }
+    .announce-card:hover {
+      transform: scale(1.02);
+      background: white;
+    }
+
+    /* navbar */
+    .navbar {
+      position: sticky;
+      top: 16px;
+      z-index: 99;
+      background: rgba(30, 55, 30, 0.9);
+      backdrop-filter: blur(16px);
+      border-radius: 60px;
+      margin: 0 auto 1.5rem auto;
+      width: fit-content;
+      max-width: 92%;
+      padding: 0.6rem 1.4rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .nav-btn {
+      background: transparent;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      font-weight: 600;
+      border-radius: 60px;
+      color: white;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .nav-btn:hover {
+      background: #c5e0b4;
+      color: #1e4620;
+      transform: scale(1.02);
+    }
+
+    section {
+      margin: 3rem 0;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    section.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .section-title {
+      font-size: 2rem;
+      margin-bottom: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #2b6e3c, #56ab2f);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    /* activities grid - modern */
+    .activities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 2rem;
+    }
+    .activity-card {
+      padding: 1.6rem;
+      text-align: center;
+      background: rgba(255,255,250,0.9);
+      border-radius: 2rem;
+      transition: all 0.25s ease;
+    }
+    .activity-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 30px -12px rgba(60, 128, 30, 0.25);
+      background: white;
+    }
+    .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .group-card {
+      padding: 2rem;
+      text-align: center;
+      max-width: 950px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+      background: rgba(255,255,250,0.9);
+    }
+
+    /* member search section */
+    .search-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+    #memberSearch {
+      width: 100%;
+      max-width: 500px;
+      padding: 1rem 1.8rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 60px;
+      background: white;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      outline: none;
+      border: 1px solid #b3dc9c;
+    }
+    #memberSearch:focus {
+      box-shadow: 0 0 0 3px #9bcd72;
+    }
+    .members-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+    .member-card {
+      padding: 0.5rem 1.2rem;
+      background: white;
+      border-radius: 60px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    .badge {
+      background: #7CB342;
+      color: white;
+      border-radius: 40px;
+      padding: 0.2rem 0.7rem;
+      font-size: 0.7rem;
+    }
+    .not-found {
+      text-align: center;
+      padding: 1rem;
+      background: #fff1f0;
+      border-radius: 60px;
+      width: fit-content;
+      margin: auto;
+    }
+
+    .contact-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+    }
+    .contact-card {
+      padding: 1.3rem;
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+      background: white;
+    }
+
+    footer {
+      background: #2b5e2f;
+      padding: 2rem;
+      text-align: center;
+      color: #e6ffe6;
+      border-radius: 48px 48px 0 0;
+      margin-top: 3rem;
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: #6fbf4c;
+      width: 48px;
+      height: 48px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.8rem;
+      cursor: pointer;
+      opacity: 0;
+      transition: 0.2s;
+      z-index: 200;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .back-to-top.show {
+      opacity: 1;
+    }
+
+    /* AI CHATBOT MODAL – floating bubbles & cool colors */
+    .ai-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1100;
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.2s ease;
+    }
+    .ai-modal.open {
+      visibility: visible;
+      opacity: 1;
+    }
+    .chat-container {
+      width: 90%;
+      max-width: 520px;
+      height: 70vh;
+      background: linear-gradient(145deg, #fffef7, #f2faea);
+      border-radius: 40px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 30px 45px rgba(30,50,10,0.4);
+      border: 1px solid #b0dd8a;
+    }
+    .chat-header {
+      background: #7CB342;
+      padding: 1rem 1.4rem;
+      color: white;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+    }
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      background: #fffff2;
+    }
+    /* bubble styles float effect */
+    .bubble-question {
+      background: #dcf5d0;
+      color: #2a5c1e;
+      border-radius: 28px;
+      padding: 0.6rem 1.2rem;
+      width: fit-content;
+      max-width: 90%;
+      margin: 0.2rem 0;
+      cursor: pointer;
+      transition: 0.1s;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(100,130,30,0.1);
+      animation: bubblePop 0.3s ease-out;
+    }
+    @keyframes bubblePop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .bubble-question:hover {
+      background: #b9e6a3;
+      transform: translateY(-2px);
+    }
+    .user-msg {
+      align-self: flex-end;
+      background: #b9da9b;
+      border-radius: 24px 24px 4px 24px;
+      padding: 0.6rem 1rem;
+      color: #1f3d17;
+      max-width: 80%;
+    }
+    .bot-msg {
+      align-self: flex-start;
+      background: #e2f0d3;
+      border-radius: 24px 24px 24px 4px;
+      padding: 0.6rem 1rem;
+      color: #2a4822;
+      max-width: 85%;
+    }
+    .typing {
+      background: #eef3e6;
+      padding: 0.5rem 1rem;
+      border-radius: 28px;
+      width: fit-content;
+      animation: blinkText 1s infinite;
+    }
+    @keyframes blinkText {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
+    }
+    .questions-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      padding: 1rem;
+      background: #e3f0d3;
+      border-top: 2px solid #aad286;
+    }
+    .close-ai {
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media (max-width: 700px) {
+      .glow-text { font-size: 2rem; }
+      .navbar { gap: 0.3rem; padding: 0.5rem 1rem; }
+      .nav-btn { padding: 0.4rem 0.9rem; font-size: 0.75rem; }
+      .container { padding: 1rem; }
+      .section-title { font-size: 1.7rem; }
+      .announce-card { width: 260px; font-size: 0.85rem; }
+    }
+    @media (max-width: 480px) {
+      .hero { padding: 1.8rem 0.5rem; }
+      .glow-text { font-size: 1.7rem; }
+      .motto { font-size: 1rem; }
+    }
+    button, .nav-btn { cursor: pointer; }
+  </style>
+</head>
+<body>
+<div id="loader" class="loader"><div class="loader-circle"></div></div>
+<canvas id="particles"></canvas>
+<div class="content" style="display: none;">
+  <div class="hero">
+    <h1 class="glow-text">Knowledge Ambassadors Club</h1>
+    <div class="motto">★ Knowledge for Life ★</div>
+  </div>
+
+  <!-- Horizontal slider with new smooth animation and announcements -->
+  <div class="container">
+    <div class="slider-container">
+      <div class="slider-track" id="sliderTrack"></div>
+    </div>
+  </div>
+
+  <!-- Sticky Nav -->
+  <div class="navbar" id="navbar">
+    <button class="nav-btn" data-section="home">🏠 Home</button>
+    <button class="nav-btn" data-section="activities">✨ Activities</button>
+    <button class="nav-btn" id="aiNavBtn">🤖 AI Assistant</button>
+    <button class="nav-btn" data-section="members">📋 Members</button>
+    <button class="nav-btn" data-section="contact">📞 Contact</button>
+  </div>
+
+  <div class="container">
+    <!-- Group description -->
+    <section id="groupDesc">
+      <div class="group-card">
+        <h2>📖 Karatina University Knowledge Ambassadors Club (KarU KAC)</h2>
+        <p style="margin-top:1rem">We are a team of students passionate about promoting knowledge, integrity, and leadership within the university and the community. <br>✨ <strong>Knowledge for Life, Service for All ✨</strong></p>
+      </div>
+    </section>
+
+    <!-- Activities Section - dynamic & fresh -->
+    <section id="activitiesSection">
+      <h2 class="section-title">🌟 Club Activities & Programs</h2>
+      <div class="activities-grid" id="activitiesGrid"></div>
+    </section>
+
+    <!-- Registered Members Checker with search -->
+    <section id="memberChecker">
+      <h2 class="section-title">✅ Check Registered Membership</h2>
+      <div class="search-wrapper">
+        <input type="text" id="memberSearch" placeholder="🔍 Search name (e.g., Alice, Brian)..." autocomplete="off">
+      </div>
+      <div id="membersResult" class="members-list"></div>
+      <p style="text-align:center; margin-top:1rem; font-size:0.85rem;">📌 If your name is missing, contact admin: <strong>adminknowledgeambassadorclub@gmail.com</strong></p>
+    </section>
+
+    <!-- Contact section with updated admin email -->
+    <section id="contactSection">
+      <h2 class="section-title">📞 Get in Touch</h2>
+      <div class="contact-flex">
+        <div class="contact-card">💰 Treasurer: Boniface Nduugu<br>📞 WhatsApp: 0729470603</div>
+        <div class="contact-card">📧 Admin Email:<br>adminknowledgeambassadorclub@gmail.com</div>
+        <div class="contact-card">📍 Library Department, KarU<br>Main Campus, Knowledge Hub</div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2025 Knowledge Ambassadors Club — Karatina University. Empowering minds, shaping future.</p>
+    <div style="margin-top: 0.5rem">🌱 #KnowledgeForLife • Integrity • Leadership</div>
+  </footer>
+  <div class="back-to-top" id="backToTop">↑</div>
+
+  <!-- AI Assistant Modal (controlled responses + bubbles) -->
+  <div id="aiModal" class="ai-modal">
+    <div class="chat-container">
+      <div class="chat-header">
+        <span>🤖 KAC Smart Assistant</span>
+        <button class="close-ai" id="closeAiModal">&times;</button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="bot-msg">🍃 Hello! I'm your club AI helper. Click any question bubble or type yours!</div>
+      </div>
+      <div class="questions-row" id="quickQuestions"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ==================== UPDATED ADMIN EMAIL ====================
+  const ADMIN_EMAIL = "adminknowledgeambassadorclub@gmail.com";
+
+  // ==================== MEMBERS LIST (ADMIN CAN EDIT) ====================
+  const registeredMembersList = [
+    "Alice Muthoni", "Brian Kipchumba", "Catherine Wanjiku", "Daniel Otieno", "Esther Wangari",
+    "Francis Mwangi", "Grace Atieno", "Hellen Nduku", "Ian Macharia", "Joyce Mwikali",
+    "Kevin Omondi", "Linda Akinyi", "Michael Njeru", "Naomi Chelagat", "Peter Muriithi",
+    "Quinter Achieng", "Ruth Jerop", "Samuel Maina", "Tracy Adhiambo", "Victor Kariuki",
+    "Beatrice Kamau", "Edwin Ochieng", "Faith Muthoni"
+  ];
+
+  // ==================== ACTIVITIES CONTENT ====================
+  const activitiesData = [
+    { icon: "🌍", title: "Community Outreach", desc: "Engaging local schools & libraries with reading programs." },
+    { icon: "📘", title: "Library Training", desc: "Workshops on using e-resources and catalog systems." },
+    { icon: "⚖️", title: "Integrity Campaigns", desc: "Anti-plagiarism & ethical research seminars." },
+    { icon: "📖", title: "Reading Culture", desc: "Book reviews, readathons & storytelling sessions." },
+    { icon: "🎉", title: "Retreats & Bonding", desc: "Leadership camps, fun days and team building." },
+    { icon: "🎓", title: "Mentorship Hub", desc: "Peer guidance and career development talks." }
+  ];
+
+  // Sliding announcements (NEW for better visibility)
+  const announcementsArray = [
+    "🎉 Upcoming events: Fourth years party To be held on Saturday Date 16!",
+    "🌟 Our Vision: To promote lifelong learning by empowering students and communities through library outreach, mentorship, and modernization of learning spaces.",
+    "🚀 Our Mission: To partner with the Library Department in conserving, creating, and sharing knowledge; to support students in accessing and utilizing resources; and to foster leadership, innovation, and lifelong learning through outreach, mentorship, and knowledge-sharing.",
+    "⭐ Are you an Active Member? Register now! Join the movement.",
+    "📢 New: Digital literacy drives coming in May — be part of change!"
+  ];
+
+  // ==================== AI BOT RESPONSES (CONTROLLED) ====================
+  const botQA = new Map([
+    ["Where do I send registration fees for the club ?", "📲 WhatsApp the Treasurer on 0729470603 Boniface Nduugu."],
+    ["I can't find my name in the list", `📧 Kindly contact admin at ${ADMIN_EMAIL}`],
+    ["How much is the subscription fee ?", "💰 It's Ksh.50 per semester and if you're new it's Ksh.100."],
+    ["Any other issue or problem", `✉️ Please email ${ADMIN_EMAIL} for any other assistance.`]
+  ]);
+  const predefinedQuestions = Array.from(botQA.keys());
+
+  // Helper functions
+  function buildActivities() {
+    const grid = document.getElementById('activitiesGrid');
+    if (!grid) return;
+    grid.innerHTML = activitiesData.map(act => `
+      <div class="activity-card">
+        <div class="icon">${act.icon}</div>
+        <h3>${act.title}</h3>
+        <p>${act.desc}</p>
+      </div>
+    `).join('');
+  }
+
+  function buildSlider() {
+    const track = document.getElementById('sliderTrack');
+    let slidesHtml = '';
+    // Double items for seamless infinite effect
+    for (let i = 0; i < 2; i++) {
+      announcementsArray.forEach(msg => {
+        slidesHtml += `<div class="announce-card">✨ ${msg}</div>`;
+      });
+    }
+    track.innerHTML = slidesHtml;
+  }
+
+  // Member live search
+  const searchInput = document.getElementById('memberSearch');
+  const membersResultDiv = document.getElementById('membersResult');
+  function updateMemberList() {
+    const query = searchInput.value.trim().toLowerCase();
+    const filtered = registeredMembersList.filter(name => name.toLowerCase().includes(query));
+    if (filtered.length === 0) {
+      membersResultDiv.innerHTML = `<div class="not-found">❌ No matching member found. Contact ${ADMIN_EMAIL}</div>`;
+    } else {
+      membersResultDiv.innerHTML = filtered.map(name => `
+        <div class="member-card">
+          ${name} <span class="badge">✓ Registered</span>
+        </div>
+      `).join('');
+    }
+  }
+
+  // ==================== AI CHAT LOGIC (FLOATING BUBBLE EFFECT) ====================
+  const chatMessagesDiv = document.getElementById('chatMessages');
+  let typingTimer = null;
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.className = sender === 'user' ? 'user-msg' : 'bot-msg';
+    msgDiv.innerText = text;
+    chatMessagesDiv.appendChild(msgDiv);
+    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+  }
+  function showTypingAndRespond(question) {
+    if (typingTimer) clearTimeout(typingTimer);
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'typing';
+    typingDiv.innerText = 'Assistant is thinking 🌿...';
+    chatMessagesDiv.appendChild(typingDiv);
+    chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    typingTimer = setTimeout(() => {
+      chatMessagesDiv.removeChild(typingDiv);
+      const answer = botQA.get(question) || `📢 I'll help! For any issue, email ${ADMIN_EMAIL} or contact treasurer.`;
+      addMessage(answer, 'bot');
+    }, 500);
+  }
+  function handleUserQuestion(questionText) {
+    addMessage(questionText, 'user');
+    showTypingAndRespond(questionText);
+  }
+  function buildQuickBubbles() {
+    const container = document.getElementById('quickQuestions');
+    container.innerHTML = '';
+    predefinedQuestions.forEach(q => {
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble-question';
+      bubble.innerText = q.length > 48 ? q.slice(0, 45) + "..." : q;
+      bubble.title = q;
+      bubble.addEventListener('click', () => handleUserQuestion(q));
+      container.appendChild(bubble);
+    });
+  }
+
+  // Modal AI controls
+  const aiModal = document.getElementById('aiModal');
+  const aiNavBtn = document.getElementById('aiNavBtn');
+  const closeAiBtn = document.getElementById('closeAiModal');
+  function openAi() { aiModal.classList.add('open'); }
+  function closeAi() { aiModal.classList.remove('open'); }
+  aiNavBtn.addEventListener('click', openAi);
+  closeAiBtn.addEventListener('click', closeAi);
+  aiModal.addEventListener('click', (e) => { if (e.target === aiModal) closeAi(); });
+
+  // Scroll observer & nav
+  const sections = document.querySelectorAll('section');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('revealed');
+    });
+  }, { threshold: 0.2 });
+  sections.forEach(s => observer.observe(s));
+  document.getElementById('groupDesc')?.classList.add('revealed');
+
+  // Nav bar actions
+  document.querySelectorAll('.nav-btn[data-section]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.getAttribute('data-section');
+      if (target === 'home') window.scrollTo({ top: 0, behavior: 'smooth' });
+      else if (target === 'activities') document.getElementById('activitiesSection')?.scrollIntoView({ behavior: 'smooth' });
+      else if (target === 'members') document.getElementById('memberChecker')?.scrollIntoView({ behavior: 'smooth' });
+      else if (target === 'contact') document.getElementById('contactSection')?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Back to top
+  const backBtn = document.getElementById('backToTop');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) backBtn.classList.add('show');
+    else backBtn.classList.remove('show');
+  });
+  backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  // Particle background subtle
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let width, height, particlesArray = [];
+  function resizeCanvas() {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+  }
+  function initParticles() {
+    particlesArray = [];
+    const particleCount = Math.min(80, Math.floor(width / 15));
+    for (let i = 0; i < particleCount; i++) {
+      particlesArray.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 3 + 1.5,
+        alpha: Math.random() * 0.4 + 0.2,
+        speedX: (Math.random() - 0.5) * 0.25,
+        speedY: (Math.random() - 0.5) * 0.2
+      });
+    }
+  }
+  function drawParticles() {
+    if (!ctx) return;
+    ctx.clearRect(0, 0, width, height);
+    for (let p of particlesArray) {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(100, 170, 70, ${p.alpha * 0.6})`;
+      ctx.fill();
+      p.x += p.speedX;
+      p.y += p.speedY;
+      if (p.x < 0) p.x = width;
+      if (p.x > width) p.x = 0;
+      if (p.y < 0) p.y = height;
+      if (p.y > height) p.y = 0;
+    }
+    requestAnimationFrame(drawParticles);
+  }
+  window.addEventListener('resize', () => { resizeCanvas(); initParticles(); });
+  resizeCanvas(); initParticles(); drawParticles();
+
+  // Load final
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const loaderDiv = document.getElementById('loader');
+      if (loaderDiv) loaderDiv.classList.add('hide');
+      document.querySelector('.content').style.display = 'block';
+    }, 700);
+    buildActivities();
+    buildSlider();
+    buildQuickBubbles();
+    updateMemberList();
+    searchInput?.addEventListener('input', updateMemberList);
+    sections.forEach(s => s.classList.add('revealed'));
+  });
+</script>
+</body>
+</html>
